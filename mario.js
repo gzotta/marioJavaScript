@@ -1,12 +1,22 @@
-// import kaboom from "kaboom"
-
 kaboom({
     global: true,
     fullscreen: true,
-    scale: 1,
+    scale: 2,
     debug: true,
-    clearlColor: [0, 0, 0, 1],
+    clearColor: [0, 0, 0, 1],
 })
+
+// Speed identifiers
+const MOVE_SPEED = 120
+const JUMP_FORCE = 360
+const BIG_JUMP_FORCE = 550
+let CURRENT_JUMP_FORCE = JUMP_FORCE
+const FALL_DEATH = 400
+const ENEMY_SPEED = 20
+
+// Game logic
+
+let isJumping = true
 
 loadRoot('https://i.imgur.com/')
 loadSprite('coin', 'wbKxhcd.png')
@@ -30,10 +40,10 @@ loadSprite('blue-surprise', 'RMqCc1G.png')
 
 
 
-scene("mario", () => {
+scene("mario", ({ level, score }) => {
     layers(['bg', 'obj', 'ui'], 'obj')
 
-    const map = [
+    const maps = [
         [
             '                                      ',
             '                                      ',
@@ -58,7 +68,6 @@ scene("mario", () => {
             '£               z   z  x x x x x  x   ()£',
             '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
         ]
-
     ]
 
     const levelCfg = {
@@ -183,7 +192,7 @@ scene("mario", () => {
 
     player.collides('pipe', () => {
         keyPress('down', () => {
-            go('game', {
+            go('mario', {
                 level: (level + 1) % maps.length,
                 score: scoreLabel.value
             })
@@ -216,4 +225,4 @@ scene('lose', ({ score }) => {
     add([text(score, 32), origin('center'), pos(width() / 2, height() / 2)])
 })
 
-start("game", { level: 0, score: 0 })
+start("mario", { level: 0, score: 0 })
